@@ -1,0 +1,125 @@
+---
+title: "BA Assignment 1 Car Dataset"
+author: "Kehinde Balogun"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+
+library(readr)
+
+```
+
+Loading Car data set
+
+```{r}
+Vehicle <- read.csv("Vehicle Dataset/car data.csv")
+
+```
+Calculating the mean of the Selling Price 
+
+```{r}
+SellingPrice_Avg <- mean(Vehicle$Selling_Price, na.rm = T)
+
+SellingPrice_Avg
+```
+
+Calculating the median of the Selling Price 
+
+```{r}
+SellingPrice_Mod <- median(Vehicle$Selling_Price, na.rm = T)
+
+SellingPriceMode <- SellingPrice_Mod [[1]]
+
+```
+Calculating the mode of the Km Driven
+
+```{r}
+KmDriven_Mod <- mlv(Vehicle$Kms_Driven, method = "mfv")
+
+KmDriven_Mod
+
+```
+Arranging the vehicle dataset by the Car year
+
+```{r}
+library(dplyr)
+
+Vehicle <- Vehicle %>%
+  
+  arrange(Year)
+```
+Calculaing the range between the Present Price and Selling Price as well as the Variance and Standard deviation of the Km Driven.
+
+```{r}
+vehicle_stat <- sapply(Vehicle, function(col) {
+  range_Pp_Sp <- max(Vehicle$Present_Price, na.rm = TRUE) - min(Vehicle$Selling_Price, na.rm = TRUE)
+  var_KmDriven <- var(Vehicle$Kms_Driven, na.rm = TRUE)
+  std_KmDriven <- sd(Vehicle$Kms_Driven, na.rm = TRUE)
+  
+  list(
+    Range = range_Pp_Sp,
+    Variance = var_KmDriven,
+    StandardDeviation = std_KmDriven
+  )
+})
+
+```
+
+Drawing Histogram for the Km Driven
+
+```{r}
+hist(Vehicle$Kms_Driven,
+  breaks = 10, #Number of breaks in the histogram
+  main = "Cars Distance Covered (In Km)",
+  xlab = "Km Driven",
+  ylab = "Frequency",
+  col = "lightblue"
+  
+)
+```
+
+Drawing Histogram for the Selling Price of cars
+
+```{r}
+hist(Vehicle$Selling_Price,
+  breaks = 10, #Number of breaks in the histogram
+  main = "Selling Price of Cars",
+  xlab = "Selling Price",
+  ylab = "Frequency",
+  col = "orange"
+  
+)
+```
+Drawing Histogram for the Present Price of cars
+
+```{r}
+hist(Vehicle$Present_Price,
+  breaks = 10, #Number of breaks in the histogram
+  main = "Present Price of Cars",
+  xlab = "Present Price",
+  ylab = "Frequency",
+  col = "maroon"
+  
+)
+```
+Creating a boxplot of Present price by Km Driven
+
+```{r}
+library(ggplot2)
+
+ggplot(Vehicle, aes(y = Present_Price, x = Kms_Driven, fill = Present_Price)) + 
+  geom_boxplot() +
+  labs(title = "Boxplot of Present Price by Km Driven",
+       y = "Present Price", x = "Km Driven", fill = "Present Price") +
+  theme_minimal()
+
+
+```
+
